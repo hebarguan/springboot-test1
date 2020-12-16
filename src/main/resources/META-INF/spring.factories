@@ -1,0 +1,8 @@
+# Application Context Initializers
+# 自定义上下文初始化
+org.springframework.context.ApplicationContextInitializer=\
+com.vm.test.spring.IApplicationContextInitializer
+
+# 自定义Application运行监听器
+#org.springframework.boot.SpringApplicationRunListener=\
+#com.vm.test.spring.BootstrapRunListener
