@@ -2,6 +2,8 @@ package com.vm.test.spring;
 
 import com.vm.test.annotation.TestComponent;
 import com.vm.test.config.IBinderProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -17,7 +19,6 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -35,6 +36,8 @@ import java.util.*;
  */
 @Component
 public class IBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, ResourceLoaderAware {
+
+    private static Logger logger = LoggerFactory.getLogger(IBeanDefinitionRegistryPostProcessor.class);
 
     private Environment environment;
 
@@ -60,7 +63,7 @@ public class IBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegis
             this.loadPropertySource();
         } catch (IOException var1) {
 
-            System.out.println("loadPropertySource error " + var1.getMessage());
+            logger.info("loadPropertySource error " + var1.getMessage());
         }
     }
 
@@ -77,7 +80,7 @@ public class IBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegis
         BindResult<IBinderProperties> bindResult = Binder.get(environment).bind("i.bind", Bindable.of(IBinderProperties.class));
         if (bindResult.isBound()) {
             IBinderProperties iBinderProperties = bindResult.get();
-            System.out.println(iBinderProperties.getBindValue());
+            logger.info(iBinderProperties.getBindValue());
         }
     }
 

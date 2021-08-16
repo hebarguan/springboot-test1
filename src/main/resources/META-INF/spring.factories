@@ -6,3 +6,6 @@ com.vm.test.spring.IApplicationContextInitializer
 # 自定义Application运行监听器
 #org.springframework.boot.SpringApplicationRunListener=\
 #com.vm.test.spring.BootstrapRunListener
+
+org.springframework.context.ApplicationListener=\
+com.vm.test.spring.IListener

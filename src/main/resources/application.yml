@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: spring-boot-test1
+
+nacos:
+  discovery:
+    server-addr: 10.1.13.235:8848
+    auto-register: true
+
+  config:
+    server-addr: 10.1.13.235:8848
+    data-id: spring-boot-test1.yaml
+    namespace: public
+    username: nacos
+    password: nacos
+    type: yaml
+    bootstrap:
+      enable: true
