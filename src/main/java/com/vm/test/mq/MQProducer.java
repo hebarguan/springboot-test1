@@ -24,6 +24,7 @@ public class MQProducer {
         producer.start();
         for (int i = 0; i < 10; i++) {
             Message msg = new Message("shopTopic", "TagA", ("TestWOCAO " + i).getBytes(RemotingHelper.DEFAULT_CHARSET));
+            msg.setDelayTimeLevel(10);
             SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
                 @Override
                 public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {

@@ -8,6 +8,11 @@ public class TestBean1 {
 
     private String name;
 
+    public TestBean1() {
+
+        System.out.println("TestBean1 Construct");
+    }
+
     public String getName() {
         return name;
     }

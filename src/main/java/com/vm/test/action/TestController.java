@@ -1,10 +1,15 @@
 package com.vm.test.action;
 
+import com.vm.test.component.ParamBean;
 import com.vm.test.service.TestGroupService;
 import com.vm.test.service.TestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -29,5 +34,10 @@ public class TestController {
         testGroupService.doTest();
         testService.doTest();
         return "ok";
+    }
+
+    @PostMapping(value = "/my/test1")
+    public String test1(@Validated @RequestBody ParamBean paramBean) {
+        return paramBean.getName();
     }
 }
