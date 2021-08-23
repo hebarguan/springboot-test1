@@ -1,6 +1,9 @@
 package com.vm.test.component;
 
 
+import com.vm.test.annotation.Phone;
+import org.hibernate.validator.constraints.Range;
+
 import javax.validation.constraints.*;
 
 /**
@@ -18,6 +21,17 @@ public class ParamBean {
     @Max(value = 1)
     @Min(value = 0)
     private Integer sex;
+
+    @Phone
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getName() {
         return name;
