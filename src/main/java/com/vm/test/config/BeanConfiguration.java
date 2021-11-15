@@ -2,11 +2,13 @@ package com.vm.test.config;
 
 import com.vm.test.aop.LogMethodInterceptor;
 import com.vm.test.component.TestBean1;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 /**
  * @author huaihai.guan
@@ -34,4 +36,5 @@ public class BeanConfiguration {
         testBean1.setName("hebar");
         return testBean1;
     }
+
 }

@@ -1,0 +1,32 @@
+package rules
+
+import com.vm.test.service.bo.KeyWordFact;
+
+rule "order goods rule1"
+    no-loop true
+    lock-on-active true
+    salience 1
+    when
+        fact: KeyWordFact($v: goodsName matches ".*(差价|刷单)*.")
+    then
+        fact.setRiskScore(fact.getRiskScore() + 5);
+        fact.getResult().put("rule1", "商品名匹配到关键:" + $v);
+end
+
+rule "username rule1"
+    when
+        fact: KeyWordFact(userName == "万某某")
+    then
+        fact.setRiskScore(fact.getRiskScore() + 10);
+        fact.getResult().put("rule3", "用户名异常: '万某某'");
+end
+
+rule "notes rule1"
+    when
+        fact: KeyWordFact(notes matches ".*(真实有效)*.")
+    then
+        fact.setRiskScore(fact.getRiskScore() + 10);
+        fact.getResult().put("rule4", "特殊要求匹配到关键字: '真实有效'");
+end
+
+

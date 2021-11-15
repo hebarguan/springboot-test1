@@ -7,4 +7,6 @@ package com.vm.test.service;
 public interface TestService {
 
     void doTest();
+
+    void doDroolsTest();
 }

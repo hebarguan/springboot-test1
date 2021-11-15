@@ -1,0 +1,109 @@
+SELECT
+	COUNT(
+	CASE
+
+			WHEN had_follow_service_active_status = '0'
+			AND had_follow_service_reminder_time <= now()
+			AND base_is_delete = '0'
+			AND base_sp_type = 'enterprise'
+			AND ((
+					base_order_type = 'inner_monthly'
+					AND ( base_order_status = 'serve_complete' OR base_order_status = 'finish' ))
+				OR ( base_order_type = 'inner_normal' AND base_order_status = 'finish' )) THEN
+				1 ELSE NULL
+			END
+			) AS tt_enterprise_wait_had_follow_service_num,
+			COUNT(
+			CASE
+
+					WHEN had_follow_service_active_status = '0'
+					AND had_follow_service_reminder_time <= now()
+					AND base_is_delete = '0'
+					AND base_sp_type = 'master'
+					AND ((
+							base_order_type = 'inner_monthly'
+							AND ( base_order_status = 'serve_complete' OR base_order_status = 'finish' ))
+						OR ( base_order_type = 'inner_normal' AND base_order_status = 'finish' )) THEN
+						1 ELSE NULL
+					END
+					) AS tt_master_wait_had_follow_service_num,
+					COUNT( CASE WHEN rate_award_del_status = '0' AND rate_award_aid != '' AND rate_award_audit_status = 'prepare' THEN 1 ELSE NULL END ) AS tt_rate_award_wait_audit_num,
+					COUNT( CASE WHEN upload_confirm_status = 'needConfirm' AND upload_submit_status != 'fail' THEN 1 ELSE NULL END ) AS tt_batch_wait_confirm_num,
+					COUNT( CASE WHEN complaint_status = 'prepare' AND complaint_enumerate_evidence_status = 'wait_from_account' THEN 1 ELSE NULL END ) AS tt_complaint_wait_evidence_num,
+					COUNT(
+					CASE
+
+							WHEN base_sp_type = 'master'
+							AND base_order_status NOT IN ( 'stop', 'serve_complete', 'finish' )
+							AND base_is_delete = '0'
+							AND logistics_is_arrived != '1'
+							AND logistics_custom_arrive_status != '1' THEN
+								1 ELSE NULL
+							END
+							) AS tt_master_wait_arrived_num,
+							COUNT(
+							CASE
+
+									WHEN base_sp_type = 'enterprise'
+									AND base_order_status NOT IN ( 'stop', 'serve_complete', 'finish' )
+									AND base_is_delete = '0'
+									AND logistics_is_arrived != '1'
+									AND logistics_custom_arrive_status != '1' THEN
+										1 ELSE NULL
+									END
+									) AS tt_enterprise_wait_arrived_num,
+									COUNT( CASE WHEN base_refund_status = 'refuse' AND base_order_status NOT IN ( 'stop', 'finish' ) AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_enterprise_refuse_paid_num,
+									COUNT( CASE WHEN bill_status IN ( 'audited', 'no_receipt' ) THEN 1 ELSE NULL END ) AS tt_bill_wait_paid_num,
+									COUNT( CASE WHEN order_task_status = 'wait_complete' AND order_task_task_type = 'second_door' AND order_task_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_wait_second_door_num,
+									COUNT( CASE WHEN base_order_status = 'wait_serve_complete' AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_in_service_num,
+									COUNT( CASE WHEN order_task_status != 'stop' AND order_task_is_delete = '0' AND order_task_task_type = 'second_door' THEN 1 ELSE NULL END ) AS tt_second_door_num,
+									COUNT( CASE WHEN base_sp_type = 'master' AND base_order_status = 'wait_offer' AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_master_wait_offer_num,
+									COUNT(
+									CASE
+
+											WHEN base_sp_type = 'master'
+											AND base_order_status = 'wait_offer'
+											AND base_is_delete = '0'
+											AND countdown_time_type = 'wait_offer_time'
+											AND countdown_time_status = 'on'
+											AND countdown_end_time - NOW( ) <= '1 hour' AND countdown_end_time - NOW( ) > '0 hour' THEN
+												1 ELSE NULL
+											END
+											) AS tt_master_wait_offer_will_close_num,
+											COUNT( CASE WHEN base_sp_type = 'master' AND base_order_status = 'wait_appoint' AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_master_wait_appoint_num,
+											COUNT(
+											CASE
+
+													WHEN base_sp_type = 'master'
+													AND base_order_status = 'wait_appoint'
+													AND base_is_delete = '0'
+													AND countdown_time_type = 'wait_hire_time'
+													AND countdown_time_status = 'on'
+													AND countdown_end_time - NOW( ) <= '1 hour' AND countdown_end_time - NOW( ) > '0 hour' THEN
+														1 ELSE NULL
+													END
+													) AS tt_master_wait_appoint_will_close_num,
+													COUNT( CASE WHEN base_sp_type = 'master' AND base_order_status = 'wait_pay' AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_master_wait_pay_num,
+													COUNT(
+													CASE
+
+															WHEN base_sp_type = 'master'
+															AND base_order_status = 'wait_pay'
+															AND base_is_delete = '0'
+															AND countdown_time_type = 'wait_paid_time'
+															AND countdown_time_status = 'on'
+															AND countdown_end_time - NOW( ) <= '1 hour' AND countdown_end_time - NOW( ) > '0 hour' THEN
+																1 ELSE NULL
+															END
+															) AS tt_master_wait_pay_will_close_num,
+															COUNT( CASE WHEN base_sp_type = 'master' AND base_order_status = 'serve_complete' AND demand_servepay_status = 'unpaid' AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_master_wait_paid_num,
+															COUNT( CASE WHEN base_sp_type = 'enterprise' AND base_order_status = 'wait_offer' AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_enterprise_wait_offer_num,
+															COUNT( CASE WHEN base_sp_type = 'enterprise' AND base_order_status = 'wait_pay' AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_enterprise_wait_pay_num,
+															COUNT( CASE WHEN base_sp_type = 'enterprise' AND base_order_status = 'serve_complete' AND base_order_type = 'inner_normal' AND demand_servepay_status = 'unpaid' AND base_is_delete = '0' THEN 1 ELSE NULL END ) AS tt_enterprise_wait_paid_num
+														FROM
+															t_wshifu_helper t1
+														WHERE
+															create_time >= '2021-01-01'
+															AND create_time < '2021-10-01'
+														AND user_id = 92020
+	AND sub_user_id = 2993;

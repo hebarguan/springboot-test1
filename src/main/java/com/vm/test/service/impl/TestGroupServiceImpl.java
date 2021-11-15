@@ -34,12 +34,12 @@ public class TestGroupServiceImpl implements TestGroupService {
         System.out.println(testGroupPO.getChannelId());
         testGroupPO.setChannelId(18);
         testGroupMapper.updateById(testGroupPO);
-        try {
-            shopService.doUpdate();
-        } catch (RuntimeException var1) {
-
-            System.out.println(var1.getMessage());
-        }
+//        try {
+//            shopService.doUpdate();
+//        } catch (RuntimeException var1) {
+//
+//            System.out.println(var1.getMessage());
+//        }
     }
 
 }
