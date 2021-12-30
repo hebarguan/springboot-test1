@@ -1,5 +1,8 @@
 package com.vm.test.config;
 
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vm.test.aop.LogMethodInterceptor;
 import com.vm.test.component.TestBean1;
 import org.kie.api.KieServices;
@@ -35,6 +38,13 @@ public class BeanConfiguration {
         TestBean1 testBean1 = new TestBean1();
         testBean1.setName("hebar");
         return testBean1;
+    }
+
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+        return interceptor;
     }
 
 }

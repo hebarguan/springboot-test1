@@ -1,7 +1,6 @@
 package com.vm.test;
 
 import com.vm.test.component.TestBean1;
-import org.kie.api.cdi.KContainer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +12,6 @@ import java.io.IOException;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @MapperScan(basePackages = {"com.vm.test.mapper"})
-@KContainer
 public class TestApplication implements CommandLineRunner {
 
 	public static void main(String[] args) throws IOException {
@@ -26,7 +24,6 @@ public class TestApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
-	    System.out.println("doSomething after springBoot startUp");
+	    System.out.println("do something after application running");
 	}
 }

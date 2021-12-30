@@ -33,7 +33,7 @@ public class TestController {
 
     @GetMapping(value = "/my/test")
     public String test() {
-        testGroupService.doTest();
+//        testGroupService.doTest();
         testService.doTest();
         return "ok";
     }

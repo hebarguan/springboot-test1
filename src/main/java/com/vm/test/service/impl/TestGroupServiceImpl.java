@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @since 2021/8/2 18:17
  */
 @Service
-@DS("other")
+@DS("holo")
 @Transactional
 public class TestGroupServiceImpl implements TestGroupService {
 

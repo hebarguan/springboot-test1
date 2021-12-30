@@ -1,20 +1,20 @@
+
 spring:
   application:
     name: spring-boot-test1
   profiles:
     active: local
 
+
 nacos:
   discovery:
-    server-addr: 192.168.198.132:8848
+    server-addr: nacos.local.wshifu.com:8848
     auto-register: true
 
   config:
-    server-addr: 192.168.198.132:8848
+    server-addr: nacos.local.wshifu.com:8848
     data-id: spring-boot-test1.yaml
     namespace: public
     username: nacos
     password: nacos
     type: yaml
-    bootstrap:
-      enable: true

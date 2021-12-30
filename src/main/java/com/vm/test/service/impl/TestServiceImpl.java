@@ -1,19 +1,14 @@
 package com.vm.test.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
-import com.vm.test.component.TestBean;
-import com.vm.test.mapper.TestMapper;
-import com.vm.test.mapper.TestPO;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.vm.test.mapper.*;
 import com.vm.test.service.TestService;
-import org.kie.api.KieBase;
-import org.kie.api.KieServices;
-import org.kie.api.cdi.KBase;
-import org.kie.api.cdi.KContainer;
-import org.kie.api.cdi.KSession;
-import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -22,31 +17,51 @@ import javax.annotation.Resource;
  * @since 2021/8/2 18:17
  */
 @Service
-@DS("main")
 public class TestServiceImpl implements TestService {
 
-    @Resource
-    private TestMapper testMapper;
+    private static final Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
+
+    private Integer updateTotal = 0;
+
+    private Integer page = 5;
 
     @Resource
-    private KieContainer kieContainer;
+    private HoloMapper holoMapper;
 
+    @Resource
+    private OrderTaskMapper orderTaskMapper;
 
-    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public void doTest() {
-        TestPO testPO = testMapper.selectById(1);
-        System.out.println(testPO.getScore());
+
+        System.out.println("doTest");
+    }
+
+    private void doNotRunThisMethod() {
+        QueryWrapper<OrderTask> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("id");
+        IPage<OrderTask> iPage;
+        do {
+            page++;
+            iPage = new Page<>(page, 100);
+            IPage<OrderTask> orderTask = orderTaskMapper.selectPage(iPage, queryWrapper);
+            orderTask.getRecords().forEach(x -> {
+                logger.info("orderTask{}", JSONObject.toJSON(x));
+                HoloWsfHelper holoWsfHelper = new HoloWsfHelper();
+                holoWsfHelper.setPkId("order_task_" + x.getId());
+                holoWsfHelper.setOrderTaskOrderId(x.getOrderId());
+                int effectedRows = holoMapper.updateById(holoWsfHelper);
+                logger.info("update row {} with pk_id {}", effectedRows, holoWsfHelper.getPkId());
+                updateTotal += effectedRows;
+            });
+        } while (iPage.getRecords().size() >= 100);
+
+        System.out.println("finished total page: " + page + ", updateTotal Rows: " + updateTotal);
     }
 
     @Override
     public void doDroolsTest() {
-        KieSession kieSession = kieContainer.newKieSession("word-ks");
-        TestBean factBean = new TestBean();
-        factBean.setName("hebarguan");
-        kieSession.insert(factBean);
-        kieSession.fireAllRules();
-        kieSession.dispose();
+
     }
 
 }
